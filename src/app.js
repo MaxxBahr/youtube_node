@@ -5,7 +5,12 @@ mongoose.set("strictQuery", false);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-const PORT = 3000;
+
+if(process.env.NODE_ENV !== "production"){
+    require("dotenv").config();
+}
+const PORT =process.env.PORT || 3000;
+const CONNECTION = process.env.CONNECTION;
 
 const people = [
   {
@@ -42,7 +47,7 @@ app.post("/", (req, res) => {
 const start = async () => {
   try {
     await mongoose.connect(
-      "mongodb+srv://admin:admin@cluster0.juwqoso.mongodb.net/?retryWrites=true&w=majority"
+        CONNECTION
     );
 
     app.listen(PORT, () => {
