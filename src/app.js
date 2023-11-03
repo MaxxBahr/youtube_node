@@ -7,10 +7,10 @@ mongoose.set("strictQuery", false);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-if(process.env.NODE_ENV !== "production"){
-    require("dotenv").config();
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
 }
-const PORT =process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 const CONNECTION = process.env.CONNECTION;
 
 const people = [
@@ -30,15 +30,20 @@ const people = [
 
 const customer = new Customer({
   name: "max",
-  industry: "tech"
+  industry: "tech",
 });
 
 app.get("/", (req, res) => {
-  res.send(customer);
+  res.send("welcome");
 });
 
-app.get("/api/customers", (req, res) => {
-  res.send({ data: people });
+app.get("/api/customers", async (req, res) => {
+  try {
+    const result = await Customer.find();
+    res.send({ data: result });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.post("/api/customers", (req, res) => {
@@ -52,9 +57,7 @@ app.post("/", (req, res) => {
 
 const start = async () => {
   try {
-    await mongoose.connect(
-        CONNECTION
-    );
+    await mongoose.connect(CONNECTION);
 
     app.listen(PORT, () => {
       console.log("App listening on Port: " + PORT);
