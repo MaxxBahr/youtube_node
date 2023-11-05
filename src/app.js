@@ -46,6 +46,12 @@ app.get("/api/customers", async (req, res) => {
   }
 });
 
+app.get("/api/customers/:test", async (req, res) => {
+  res.json({
+    requestQuery: req.query,
+  });
+});
+
 app.post("/api/customers", async (req, res) => {
   console.log(req.body);
   const customer = new Customer(req.body);
@@ -53,7 +59,7 @@ app.post("/api/customers", async (req, res) => {
     await customer.save();
     res.status(201).json({ customer });
   } catch (e) {
-    res.status(400).json({ error: e.message});
+    res.status(400).json({ error: e.message });
   }
 });
 
