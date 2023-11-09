@@ -46,11 +46,24 @@ app.get("/api/customers", async (req, res) => {
   }
 });
 
-app.get("/api/customers/:test", async (req, res) => {
-  res.json({
-    requestQuery: req.query,
-  });
+app.get("/api/customers/:id", async (req, res) => {
+  try {
+    const customer = await Customer.findById(req.params.id);
+    console.log(customer);
+    if (!customer) {
+      res.status(404).json({ error: "User not found" });
+    } else {
+      res.json({ customer });
+    }
+  } catch (e) {
+    res.status(500).send("<h1>something went wrong");
+  }
 });
+
+api.put("/api/customers/:id", async(req, res)=>{
+  const customerId = req.params.id;
+  await Customer.replaceOne({_id: customerId}, req.body);
+})
 
 app.post("/api/customers", async (req, res) => {
   console.log(req.body);
